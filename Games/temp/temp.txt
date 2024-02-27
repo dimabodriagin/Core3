@@ -1,0 +1,12 @@
+Директория Games/src создана
+Директория Games/res создана
+Директория Games/savegames создана
+Директория Games/temp создана
+Директория Games/src/main создана
+Директория Games/src/test создана
+Файл Games/src/main/Main.java создан
+Файл Games/src/main/Utils.java создан
+Директория Games/res/drawables создана
+Директория Games/res/vectors создана
+Директория Games/res/icons создана
+Файл Games/temp/temp.txt создан
