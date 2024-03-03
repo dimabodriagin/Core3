@@ -8,24 +8,24 @@ import java.util.zip.ZipOutputStream;
 
 public class Main {
 
-    public static String makeDir(String name) {
+    public static void makeDir(String name, StringBuilder log) {
         var dir = new File(name);
         if (dir.mkdir()) {
-            return "Директория " + name + " создана\n";
+            log.append("Директория " + name + " создана\n");
         }
-        return "Директория " + name + " не создана\n";
+        log.append("Директория " + name + " не создана\n");
     }
 
-    public static String makeFile(String name) {
+    public static void makeFile(String name, StringBuilder log) {
         var file = new File(name);
         try {
             if (file.createNewFile()) {
-                return "Файл " + name + " создан\n";
+                log.append("Файл " + name + " создан\n");
             }
         } catch (IOException excp) {
             System.out.println(excp.getMessage());
         }
-        return "Файл " + name + " не создан\n";
+        log.append("Файл " + name + " не создан\n");
     }
 
     public static void saveGame(String pathname, GameProgress progress) {
@@ -91,34 +91,34 @@ public class Main {
 
     public static void main(String[] args) {
 
-//        StringBuilder log = new StringBuilder();
-//
-//        Scanner scanner = new Scanner(System.in);
-//        for (int i = 0; i < 4; i++) {
-//            log.append(makeDir(scanner.nextLine()));
-//        }
-//
-//        for (int i = 0; i < 2; i++) {
-//            log.append(makeDir(scanner.nextLine()));
-//        }
-//
-//        for (int i = 0; i < 2; i++) {
-//            log.append(makeFile(scanner.nextLine()));
-//        }
-//
-//        for (int i = 0; i < 3; i++) {
-//            log.append(makeDir(scanner.nextLine()));
-//        }
-//
-//        String fileName = scanner.nextLine();
-//        log.append(makeFile(fileName));
-//
-//        try (FileWriter writer = new FileWriter(fileName, false);) {
-//            writer.write(new String(log));
-//            writer.flush();
-//        } catch (IOException excp) {
-//            System.out.println(excp.getMessage());
-//        }
+        StringBuilder log = new StringBuilder();
+
+        makeDir("Games/src", log);
+        makeDir("Games/res", log);
+        makeDir("Games/savegames", log);
+        makeDir("Games/temp", log);
+
+
+        makeDir("Games/src/main", log);
+        makeDir("Games/src/test", log);
+
+
+        makeFile("Games/src/main/Main.java", log);
+        makeFile("Games/src/main/Utils.java", log);
+
+
+        makeDir("Games/res/drawables", log);
+        makeDir("Games/res/vectors", log);
+        makeDir("Games/res/icons", log);
+
+        makeFile("Games/temp/temp.txt", log);
+
+        try (FileWriter writer = new FileWriter("Games/temp/temp.txt", false);) {
+            writer.write(new String(log));
+            writer.flush();
+        } catch (IOException excp) {
+            System.out.println(excp.getMessage());
+        }
 
         GameProgress startProgress =  new GameProgress(100, 3, 10, 3.5);
         GameProgress midProgress =  new GameProgress(50, 5, 7, 5.5);
@@ -145,15 +145,3 @@ public class Main {
         System.out.println(gameProgress);
     }
 }
-
-//Games/src
-//        Games/res
-//        Games/savegames
-//        Games/temp
-//        Games/src/main
-//        Games/src/test
-//        Games/src/main/Main.java
-//        Games/src/main/Utils.java
-//        Games/res/drawables
-//        Games/res/vectors
-//        Games/res/icons
