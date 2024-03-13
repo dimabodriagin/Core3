@@ -1,7 +1,6 @@
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
@@ -31,7 +30,7 @@ public class Main {
     public static void saveGame(String pathname, GameProgress progress) {
 
         try (FileOutputStream fos = new FileOutputStream(pathname);
-            ObjectOutputStream oos = new ObjectOutputStream(fos)) {
+             ObjectOutputStream oos = new ObjectOutputStream(fos)) {
 
             oos.writeObject(progress);
         } catch (IOException ex) {
@@ -44,7 +43,7 @@ public class Main {
         try (ZipOutputStream zout = new ZipOutputStream(new FileOutputStream(pathame))) {
             for (String name : names) {
                 FileInputStream fis = new FileInputStream(name);
-                ZipEntry entry = new ZipEntry(name);
+                ZipEntry entry = new ZipEntry(getFileNameFromPathname(name));
 
                 zout.putNextEntry(entry);
                 byte[] buffer = new byte[fis.available()];
@@ -53,18 +52,28 @@ public class Main {
                 zout.write(buffer);
                 zout.closeEntry();
                 fis.close();
+
+                File file = new File(name);
+                if (file.delete()) {
+                    System.out.println(file.toString() + " удален!");
+                }
             }
         } catch (Exception ex) {
             System.out.println(ex.getMessage());
         }
     }
 
+    public static String getFileNameFromPathname(String pathname) {
+        String directory = "D:/netology/Core3/Games/savegames/";
+        return pathname.substring(directory.length());
+    }
+
     public static void openZip(String zipName, String directoryName) {
-        try(ZipInputStream zin = new ZipInputStream(new FileInputStream(zipName))) {
+        try (ZipInputStream zin = new ZipInputStream(new FileInputStream(zipName))) {
             ZipEntry entry;
             String name;
             while ((entry = zin.getNextEntry()) != null) {
-                name = entry.getName();
+                name = directoryName + "/" + entry.getName();
                 FileOutputStream fout = new FileOutputStream(name);
                 for (int c = zin.read(); c != -1; c = zin.read()) {
                     fout.write(c);
@@ -113,16 +122,16 @@ public class Main {
 
         makeFile("Games/temp/temp.txt", log);
 
-        try (FileWriter writer = new FileWriter("Games/temp/temp.txt", false);) {
+        try (FileWriter writer = new FileWriter("Games/temp/temp.txt", false)) {
             writer.write(new String(log));
             writer.flush();
         } catch (IOException excp) {
             System.out.println(excp.getMessage());
         }
 
-        GameProgress startProgress =  new GameProgress(100, 3, 10, 3.5);
-        GameProgress midProgress =  new GameProgress(50, 5, 7, 5.5);
-        GameProgress finishProgress =  new GameProgress(150, 2, 15, 7.5);
+        GameProgress startProgress = new GameProgress(100, 3, 10, 3.5);
+        GameProgress midProgress = new GameProgress(50, 5, 7, 5.5);
+        GameProgress finishProgress = new GameProgress(150, 2, 15, 7.5);
 
         saveGame("D:/netology/Core3/Games/savegames/start.dat", startProgress);
         saveGame("D:/netology/Core3/Games/savegames/mid.dat", midProgress);
@@ -134,11 +143,6 @@ public class Main {
         names.add("D:/netology/Core3/Games/savegames/finish.dat");
 
         zipFiles("D:/netology/Core3/Games/savegames/gameZip.zip", names);
-
-        for (String name : names) {
-            File file = new File(name);
-            file.delete();
-        }
 
         openZip("D:/netology/Core3/Games/savegames/gameZip.zip", "D:/netology/Core3/Games/savegames");
         GameProgress gameProgress = openProgress("D:/netology/Core3/Games/savegames/start.dat");
